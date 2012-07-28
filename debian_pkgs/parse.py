@@ -20,7 +20,7 @@ class Package(object):
         if info[1].islower() or info[1] == ' ':
             info = info[0].lower() + info[1:]
 
-        self.info = "Package description: %s." % (info)
+        self.info = "Package description: %s" % (info)
 
         self.reference = reference
         
@@ -71,6 +71,8 @@ class Parser(object):
             # fix for agda-bin package; removing non-ascii characters
             info = filter(lambda x: x in string.printable, info)
 
+            info = "%s." % (info.rstrip('\n'))
+
             if '[' in info:
                 data = re.match('\[(.*?)\] (.*)', info)
                 if data:
@@ -78,8 +80,6 @@ class Parser(object):
                     info = data[1] + ' [' + data[0] + ']'
                 else:
                     info = re.sub('\[(.*?)\]', '', info)
-
-            info = info.rstrip('\n')
 
             reference = self.UBUNTU_PKGS_URL + '/' + name
 
