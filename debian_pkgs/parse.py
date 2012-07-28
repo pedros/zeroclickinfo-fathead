@@ -60,7 +60,7 @@ class Parser(object):
         for line in self.input:
 
             if '(' in line:
-                data = re.match('(.*?) \(.*\) (.*)', line).groups()
+                data = re.match('(.*?) \(.*?\) (.*)', line).groups()
                 name = data[0]
                 info = data[1]
             else:
