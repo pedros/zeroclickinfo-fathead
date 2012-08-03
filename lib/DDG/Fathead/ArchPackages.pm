@@ -4,7 +4,7 @@ package DDG::Fathead::ArchPackages;
 
 use DDG::Fathead;
 
-source_info (
+zci_fathead (
     name    => 'Arch Linux Packages',
     domain  => 'archlinux.org',
     type    => 'Arch Package',
