@@ -76,8 +76,7 @@ map {
         "A",                                 # type
         "",                                  # redirect
         "",                                  # otheruses
-        "PCI IDs\\n"
-        . (exists $queries{$_}->{category} ?
+        (exists $queries{$_}->{category} ?
             $queries{$_}->{category} : ""),  # categories
         "",                                  # references
         "",                                  # see_also
