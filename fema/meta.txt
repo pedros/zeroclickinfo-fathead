@@ -1,0 +1,5 @@
+Name: FEMA Disaster Declarations
+Domain: http://data.gov
+Type: Event
+MediaWiki: 0
+Keywords: fema, disaster, disasters
