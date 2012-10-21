@@ -13,7 +13,6 @@ my $i = 0;
 
 while (my $row = $parser->getline($csv)) {
     if ($i == 0) {
-        #my @keys = split ',', $row;
         @key{(0..scalar @{$row}-1)} = map {s/\s+$//;$_} @{$row};
         $i = 1; next;
     }
