@@ -2,25 +2,27 @@
 
 use strict;
 use warnings;
+use Text::CSV;
+
+my $parser = Text::CSV->new();
 
 open my $csv, '<fema.csv' or die;
-my $i = 0;
+
 my %key = ();
-while (<$csv>) {
-    chomp;
-    s/"//g;
+my $i = 0;
+
+while (my $row = $parser->getline($csv)) {
     if ($i == 0) {
-        my @keys = split ',', $_;
-        @key{(0..scalar @keys-1)} = map {s/\s+$//;$_} @keys;
-        $i++; next;
+        #my @keys = split ',', $row;
+        @key{(0..scalar @{$row}-1)} = map {s/\s+$//;$_} @{$row};
+        $i = 1; next;
     }
     my $column = 0;
-    foreach(split ',', $_) {
+    my @columns = @{$row};
+    foreach(@columns) {
         print "$key{$column}: $_\n";
         $column++;
-        $column = 0 if $column == scalar keys %key;
     }
     print "\n";
 }
-close $csv;
 
