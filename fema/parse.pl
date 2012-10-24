@@ -41,7 +41,7 @@ map {
         "A",                                 # type
         "",                                  # redirect
         "",                                  # otheruses
-        "fema disasters",                    # categories
+        "FEMA Disasters",                    # categories
         "",                                  # references
         "",                                  # see_also
         "",                                  # further_reading
@@ -49,8 +49,8 @@ map {
         "",                                  # disambiguation
         "",                                  # images
         (join '<br>', map {
-            "$_: $disaster{$_}"
-        } keys %disaster),                    # abstract
+            "<i>$_</i>: $disaster{$_}"
+        } keys %disaster),                   # abstract
         $source                              # source_url
     );
     print $output "\n";
