@@ -5,8 +5,6 @@ use warnings;
 use Text::CSV;
 use Spreadsheet::ParseExcel;
 
-my $source = 'https://explore.data.gov/Other/FEMA-Disaster-Declarations-Summary/uihf-be6u';
-
 my $parser = Spreadsheet::ParseExcel->new();
 my $workbook = $parser->parse('fema.xls');
 if (!defined $workbook) { die $parser->error(), ".\n"; }
@@ -53,6 +51,7 @@ map {
     my $abstract = join '<br>', map {
         "<i>$_</i>: $disaster{$_}"
     } grep {!/day|month|year/} keys %disaster;
+    my $source_url = "http://www.fema.gov/disaster/$disaster{'Disaster Number'}";
     print $output join "\t", (
         $disaster{'Disaster Number'},        # title
         "A",                                 # type
@@ -66,7 +65,7 @@ map {
         "",                                  # disambiguation
         "",                                  # images
         $abstract,                           # abstract
-        $source                              # source_url
+        $source_url                          # source_url
     );
     print $output "\n";
 } @disasters;
