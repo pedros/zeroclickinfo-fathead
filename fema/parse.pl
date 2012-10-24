@@ -113,7 +113,7 @@ map {
                  . ($disaster{'HM Program Declared'} ?
                     "A Hazard Mitigation program was declared for this disaster. " : "")
                  . ($disaster{'IH Program Declared'} ?
-                    "An Individuals and Households program was declared for this disaster ." : "")
+                    "An Individuals and Households program was declared for this disaster. " : "")
                  . ($disaster{'IA Program Declared'} ?
                     "An Individual Assistance program was declared for this disaster. " : "")
                  . ($disaster{'PA Program Declared'} ?
