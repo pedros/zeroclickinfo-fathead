@@ -3,34 +3,36 @@
 use strict;
 use warnings;
 use Text::CSV;
+use Spreadsheet::ParseExcel;
 
 my $source = 'https://explore.data.gov/Other/FEMA-Disaster-Declarations-Summary/uihf-be6u';
 
-my $parser = Text::CSV->new();
-
-open my $csv, '<fema.csv' or die;
+my $parser = Spreadsheet::ParseExcel->new();
+my $workbook = $parser->parse('fema.xls');
+if (!defined $workbook) { die $parser->error(), ".\n"; }
 
 my @disasters = ();
 my %key = ();
-my $i = 0;
 
-while (my $row = $parser->getline($csv)) {
-    if ($i == 0) {
-        @key{(0..scalar @{$row}-1)} = map {s/\s+$//;$_} @{$row};
-        $i = 1; next;
-    }
-    my $column = 0;
-    my @columns = @{$row};
+my $worksheet = ($workbook->worksheets())[2];
+
+my ( $row_min, $row_max ) = $worksheet->row_range();
+my ( $col_min, $col_max ) = $worksheet->col_range();
+
+for my $row ( $row_min .. $row_max ) {
+    next if $row < 2;
     my %disaster = ();
-    foreach(@columns) {
-        $disaster{$key{$column}} = $_;
-        $column++;
+    for my $col ( $col_min .. $col_max ) {
+        my $cell = $worksheet->get_cell( $row, $col );
+        next unless $cell;
+        if ($row == 2) {
+            $key{$col} = $cell->value();
+        } else {
+            $disaster{$key{$col}} = $cell->value();
+        }
     }
-    push @disasters, \%disaster;
+    push @disasters, \%disaster unless scalar keys %disaster == 0;
 }
-
-close $csv;
-
 
 open my $output, '>output.txt' or die;
 

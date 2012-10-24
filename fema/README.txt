@@ -1,8 +1,7 @@
 FEMA Disaster Declarations
 
 Dependencies:
-perl v5.14.2 (with Text::CSV)
-xls2csv
+perl v5.14.2 (with Text::CSV and Spreadsheet::Excel)
 
 
 Metadata from http://www.fema.gov/datasets/Data.gov.FEMADeclarationsSummary.v1.0.rtf:
