@@ -5,7 +5,7 @@ use warnings;
 use Spreadsheet::ParseExcel;
 
 my $parser = Spreadsheet::ParseExcel->new();
-my $workbook = $parser->parse('fema.xls');
+my $workbook = $parser->parse('download/fema.xls');
 if (!defined $workbook) { die $parser->error(), ".\n"; }
 
 my @disasters = ();
