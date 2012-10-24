@@ -4,10 +4,13 @@ use strict;
 use warnings;
 use Text::CSV;
 
+my $source = 'https://explore.data.gov/Other/FEMA-Disaster-Declarations-Summary/uihf-be6u';
+
 my $parser = Text::CSV->new();
 
 open my $csv, '<fema.csv' or die;
 
+my @disasters = ();
 my %key = ();
 my $i = 0;
 
@@ -18,10 +21,38 @@ while (my $row = $parser->getline($csv)) {
     }
     my $column = 0;
     my @columns = @{$row};
+    my %disaster = ();
     foreach(@columns) {
-        print "$key{$column}: $_\n";
+        $disaster{$key{$column}} = $_;
         $column++;
     }
-    print "\n";
+    push @disasters, \%disaster;
 }
+
+close $csv;
+
+
+open my $output, '>output.txt' or die;
+
+map {
+    my %disaster = %{$_};
+    print $output join "\t", (
+        $disaster{'Disaster Number'},        # title
+        "A",                                 # type
+        "",                                  # redirect
+        "",                                  # otheruses
+        "fema disasters",                    # categories
+        "",                                  # references
+        "",                                  # see_also
+        "",                                  # further_reading
+        "",                                  # external_links
+        "",                                  # disambiguation
+        "",                                  # images
+        "",                                  # abstract
+        $source                              # source_url
+    );
+    print $output "\n";
+} @disasters;
+
+close $output;
 
