@@ -25,7 +25,6 @@ for my $row ( $row_min .. $row_max ) {
         if ($row == 2) {
             my $column_title = $cell->value;
             $column_title =~ s/^\s+|\s+$//g;
-            print "|$column_title|\n";
             $key{$col} = $column_title;
         } else {
             $disaster{$key{$col}} = $cell->value();
@@ -105,19 +104,23 @@ map {
     @duration = ($disaster{'start_year'}..$disaster{'end_year'})
         if $disaster{'end_year'};
     my $categories = join "\\n", map { "Disasters in $_" } @duration;
-    my $abstract = "$states{$disaster{'State'}}, $disaster{'Declared County/Area'}: "
+    my $programs = join " program, ", (
+        ($disaster{'HM Program Declared'} eq 'Yes' ? 'a Hazard Mitigation' : ()),
+        ($disaster{'IH Program Declared'} eq 'Yes' ? 'an Individual and Households' : ()),
+        ($disaster{'IA Program Declared'} eq 'Yes' ? 'an Individuals Assistance' : ()),
+        ($disaster{'PA Program Declared'} eq 'Yes' ? 'a Public Assistance' : ()),
+    );
+    if ($programs) {
+        $programs =~ s/,([^,]+)$/ and$1/;
+        $programs = ucfirst "$programs program was declared for this disaster. ";
+    }
+    my $abstract = (exists $states{$disaster{'State'}} ? $states{$disaster{'State'}} :
+                    $disaster{'State'}) . ", $disaster{'Declared County/Area'}: "
                  . "$disaster{'Title'}<br>"
                  . "<i>Duration</i>: $disaster{'Incident Begin Date'} - "
                  . ($disaster{'Incident End Date'} ? "$disaster{'Incident End Date'}"
                     : "Ongoing") . "<br>"
-                 . ($disaster{'HM Program Declared'} ?
-                    "A Hazard Mitigation program was declared for this disaster. " : "")
-                 . ($disaster{'IH Program Declared'} ?
-                    "An Individuals and Households program was declared for this disaster. " : "")
-                 . ($disaster{'IA Program Declared'} ?
-                    "An Individual Assistance program was declared for this disaster. " : "")
-                 . ($disaster{'PA Program Declared'} ?
-                    "A Public Assistance program was declared for this disaster. " : "")
+                 . "$programs"
                  . ($disaster{'Disaster Close Out Date'} ?
                     "All financial transactions were completed on "
                     . "$disaster{'Disaster Close Out Date'}." : "");
