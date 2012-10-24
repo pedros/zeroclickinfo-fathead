@@ -48,7 +48,9 @@ map {
         "",                                  # external_links
         "",                                  # disambiguation
         "",                                  # images
-        "",                                  # abstract
+        (join '<br>', map {
+            "$_: $disaster{$_}"
+        } keys %disaster),                    # abstract
         $source                              # source_url
     );
     print $output "\n";
