@@ -30,7 +30,11 @@ for my $row ( $row_min .. $row_max ) {
         } else {
             $disaster{$key{$col}} = $cell->value();
             if ($key{$col} eq 'Incident Begin Date') {
-                ($disaster{'day'}, $disaster{'month'}, $disaster{'year'})
+                ($disaster{'start_day'}, $disaster{'start_month'}, $disaster{'start_year'})
+                    = split '/', $cell->value();
+            }
+            if ($key{$col} eq 'Incident End Date') {
+                ($disaster{'end_day'}, $disaster{'end_month'}, $disaster{'end_year'})
                     = split '/', $cell->value();
             }
         }
@@ -42,22 +46,26 @@ open my $output, '>output.txt' or die;
 
 map {
     my %disaster = %{$_};
+    my @duration = ($disaster{'start_year'});
+    @duration = ($disaster{'start_year'}..$disaster{'end_year'})
+        if $disaster{'end_year'};
+    my $categories = join "\\n", map { "Disasters in $_" } @duration;
+    my $abstract = join '<br>', map {
+        "<i>$_</i>: $disaster{$_}"
+    } grep {!/day|month|year/} keys %disaster;
     print $output join "\t", (
         $disaster{'Disaster Number'},        # title
         "A",                                 # type
         "",                                  # redirect
         "",                                  # otheruses
-        "Disasters in $disaster{'year'}",    # categories
+        $categories,                         # categories
         "",                                  # references
         "",                                  # see_also
         "",                                  # further_reading
         "",                                  # external_links
         "",                                  # disambiguation
         "",                                  # images
-        (join '<br>', map {
-            "<i>$_</i>: $disaster{$_}"
-                unless /day|month|year/
-        } keys %disaster),                   # abstract
+        $abstract,                           # abstract
         $source                              # source_url
     );
     print $output "\n";
