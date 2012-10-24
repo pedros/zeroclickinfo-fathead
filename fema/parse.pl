@@ -29,6 +29,10 @@ for my $row ( $row_min .. $row_max ) {
             $key{$col} = $cell->value();
         } else {
             $disaster{$key{$col}} = $cell->value();
+            if ($key{$col} eq 'Incident Begin Date') {
+                ($disaster{'day'}, $disaster{'month'}, $disaster{'year'})
+                    = split '/', $cell->value();
+            }
         }
     }
     push @disasters, \%disaster unless scalar keys %disaster == 0;
@@ -43,7 +47,7 @@ map {
         "A",                                 # type
         "",                                  # redirect
         "",                                  # otheruses
-        "FEMA Disasters",                    # categories
+        "Disasters in $disaster{'year'}",    # categories
         "",                                  # references
         "",                                  # see_also
         "",                                  # further_reading
@@ -52,6 +56,7 @@ map {
         "",                                  # images
         (join '<br>', map {
             "<i>$_</i>: $disaster{$_}"
+                unless /day|month|year/
         } keys %disaster),                   # abstract
         $source                              # source_url
     );
