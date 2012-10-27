@@ -18,13 +18,18 @@ class Package(object):
     def __str__(self):
         fields = [
                 self.name,              # $page
-                '',                     # $namespace
-                self.reference,         # $url
-                self.info,              # $description
-                '',                     # $synopsis (code)
-                '',                     # $details
                 'A',                    # $type
-                ''                      # $lang
+                '',                     # $redirect
+                '',                     # $otheruses
+                '',                     # $categories
+                '',                     # $references
+                '',                     # $see_also
+                '',                     # $further_reading
+                '',                     # $external_links
+                '',                     # $disambiguation
+                '',                     # $images
+                self.info,              # $abstract
+                self.reference,         # $source_url
                 ]
 
         output = '%s' % ('\t'.join(fields))
