@@ -106,7 +106,7 @@ class LkddbParser:
               break
             help_lines.append(lxml.etree.tostring(help_line,encoding="unicode",method="text").replace("\n"," ").strip())
           help = "<i>Help text:</i> " + " ".join(help_lines)
-          if (not help) or (help == "(none)"):
+          if (not help) or (help == "<i>Help text:</i> (none)"):
             self.logParsingError(__class__.MISSING_CONTENT,config_page_url)
             continue
 
