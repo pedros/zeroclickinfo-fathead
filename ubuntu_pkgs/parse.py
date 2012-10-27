@@ -12,7 +12,7 @@ class Package(object):
     """ Contains informations about an Ubuntu package"""
     def __init__(self, name, info, reference):
         self.name = name
-        self.info = info
+        self.info = 'Package description: ' + info
         self.reference = reference
         
     def __str__(self):
