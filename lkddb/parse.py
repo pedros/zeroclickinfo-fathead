@@ -25,6 +25,10 @@ class KernelConfigItem:
     redirect = "%s\tR\t%s\t\t\t\t\t\t\t\t\t\t" % (self.name.split("_",1)[1],self.name)
     if self.help:
       snippet = self.help
+
+      if len(snippet) > 400:
+        snippet = snippet[:397] + "..."
+
     """
     if self.type:
       snippet = "%s\\n- type: %s" % (snippet, self.type)
