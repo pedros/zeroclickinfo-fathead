@@ -2,6 +2,7 @@
 
 import logging
 import os
+import re
 import gzip
 import string
 
@@ -12,24 +13,19 @@ class Package(object):
     """ Contains informations about an Ubuntu package"""
     def __init__(self, name, info, reference):
         self.name = name
-        self.info = 'Package description: ' + info
+        self.info = info
         self.reference = reference
         
     def __str__(self):
         fields = [
                 self.name,              # $page
+                '',                     # $namespace
+                self.reference,         # $url
+                self.info,              # $description
+                '',                     # $synopsis (code)
+                '',                     # $details
                 'A',                    # $type
-                '',                     # $redirect
-                '',                     # $otheruses
-                '',                     # $categories
-                '',                     # $references
-                '',                     # $see_also
-                '',                     # $further_reading
-                '',                     # $external_links
-                '',                     # $disambiguation
-                '',                     # $images
-                self.info,              # $abstract
-                self.reference,         # $source_url
+                ''                      # $lang
                 ]
 
         output = '%s' % ('\t'.join(fields))
@@ -54,18 +50,27 @@ class Parser(object):
 
         self.packages = []
         for line in self.input:
-            data = line.split(' ')
 
-            name = data[0]
-            info = data[3:]
-
-            if len(info) > 1:
-                info = ' '.join(info[1:])
+            if '(' in line:
+                data = re.match('(.*?) \(.*?\) (.*)', line).groups()
+                name = data[0]
+                info = data[1]
             else:
-                info = ' '.join(info)
-            
+                data = line.split(' ')
+                name = data[0]
+                info = ' '.join(data[1::])
+
             # fix for agda-bin package; removing non-ascii characters
             info = filter(lambda x: x in string.printable, info)
+
+            if '[' in info:
+                data = re.match('\[(.*?)\] (.*)', info)
+                if data:
+                    data = data.groups()
+                    info = data[1] + ' [' + data[0] + ']'
+                else:
+                    info = re.sub('\[(.*?)\]', '', info)
+
             info = info.rstrip('\n')
 
             reference = self.UBUNTU_PKGS_URL + '/' + name
